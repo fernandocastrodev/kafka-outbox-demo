@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Venta {
+  id        Int      @id @default(autoincrement())
+  producto  String
+  cantidad  Int
+  total     Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+
+  @@map("ventas")
+}
+
+model OutboxEvent {
+  id          Int      @id @default(autoincrement())
+  eventType   String
+  payload     Json
+  status      String   @default("PENDIENTE")
+  createdAt   DateTime @default(now())
+  publishedAt DateTime?
+
+  @@map("outbox_events")
+}
+
+model ProcessedEvent {
+  id          Int      @id @default(autoincrement())
+  eventId     Int      @unique
+  consumer    String
+  processedAt DateTime @default(now())
+
+  @@map("processed_events")
+}
+
+model Stock {
+  id        Int      @id @default(autoincrement())
+  producto  String   @unique
+  cantidad  Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@map("stock")
+}
