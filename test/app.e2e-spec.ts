@@ -30,10 +30,12 @@ describe('AppController (e2e)', () => {
     await app.close();
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+  it('/health (GET)', () => {
+    return request(app.getHttpServer()).get('/health').expect(200).expect({
+      status: 'ok',
+      service: 'kafka-outbox-demo',
+      pattern: 'transactional-outbox',
+      message: 'La API está activa y lista para recibir solicitudes',
+    });
   });
 });

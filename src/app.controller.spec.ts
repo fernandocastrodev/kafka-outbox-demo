@@ -14,9 +14,14 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('health', () => {
+    it('should report the service as healthy', () => {
+      expect(appController.getHealth()).toEqual({
+        status: 'ok',
+        service: 'kafka-outbox-demo',
+        pattern: 'transactional-outbox',
+        message: 'La API está activa y lista para recibir solicitudes',
+      });
     });
   });
 });
